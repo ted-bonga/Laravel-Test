@@ -180,6 +180,7 @@
                                 <span style="display: inline-block; width: 15px; height: 15px; background-color: #dc3545; margin-right: 10px;"></span>
                                 {{ __('messages.total_expense') }}: {{ $monthly_expenses }} €
                             </p>
+                            <br>
                         </div>
                         <canvas id="incomeExpenseChart" style="width: 100%; height: 30vh;"></canvas>
                     </div>
@@ -228,6 +229,7 @@
                     </div>
                     <div class="card-body">
                         <div class="mt-3">
+                            <br>
                             <p>
                                 <span style="display: inline-block; width: 15px; height: 15px; background-color: #007bff; margin-right: 10px;"></span>
                                 {{ __('messages.total_income') }}: {{ $total_incomes }} €
@@ -236,6 +238,8 @@
                                 <span style="display: inline-block; width: 15px; height: 15px; background-color: #dc3545; margin-right: 10px;"></span>
                                 {{ __('messages.total_expense') }}: {{ $total_expenses }} €
                             </p>
+                            <br>
+                            <br>
                         </div>
                         <canvas id="incomeExpenseTotalChart" style="width: 100%; height: 30vh;"></canvas>
                     </div>

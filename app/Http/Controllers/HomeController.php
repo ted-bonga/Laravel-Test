@@ -46,7 +46,7 @@ class HomeController extends Controller
             ->get();
 
         $monthly_expense_by_type = $monthly_expenses->groupBy('type_id')->map(function ($group) {
-            return $group->sum('expense_amount');
+            return number_format($group->sum('expense_amount'), '2','.','');
         });
 
         $monthly_type_ids = $monthly_expense_by_type->keys();
@@ -64,17 +64,18 @@ class HomeController extends Controller
 
 
         // Questo serve per mostrare il rettangolo per le spese totali
-        $data['total_incomes'] = $total_incomes->sum('income_amount');
+        $data['total_incomes'] = number_format($total_incomes->sum('income_amount'), '2','.' ,'');
 
-        $data['total_expenses'] = $total_expenses->sum('expense_amount');
+        $data['total_expenses'] = number_format( $total_expenses->sum('expense_amount') , '2', '.', '');
 
-        $data['total_balance'] = $data['total_incomes'] - $data['total_expenses'];
+        $data['total_balance'] =  number_format($data['total_incomes'] - $data['total_expenses'],'2','.','');
+
 
         $data['all_incomes'] = Income::where('user_id', Auth::id())->get()->sum('income_amount');
 
         // Variabili usati per fare i chart pie
         $total_expense_by_type = $total_expenses->groupBy('type_id')->map(function ($group) {
-            return $group->sum('expense_amount');
+            return number_format($group->sum('expense_amount'),'2','.','');
         });
 
         $total_type_ids = $total_expense_by_type->keys();
