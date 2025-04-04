@@ -49,23 +49,23 @@ class HomeController extends Controller
             return $group->sum('expense_amount');
         });
 
-        $typeIds = $monthly_expense_by_type->keys();
-        $type_names = Type::whereIn('id', $typeIds)->pluck('name', 'id');
+        $monthly_type_ids = $monthly_expense_by_type->keys();
+        $monthly_type_names = Type::whereIn('id', $monthly_type_ids)->pluck('name', 'id');
 
-        $data['type_names'] = $type_names;
+        $data['monthly_type_names'] = $monthly_type_names;
         $data['monthly_expense_by_type'] = $monthly_expense_by_type;
         $data['selected_year'] = $year;
         $data['selected_month'] = $month;
 
-        $incomes = Income::where('user_id', Auth::id())->get();
+        $total_incomes = Income::where('user_id', Auth::id())->get();
 
-        $expenses = Expense::where('user_id', Auth::id())->get();
+        $total_expenses = Expense::where('user_id', Auth::id())->get();
 
 
         // Questo serve per mostrare il rettangolo per le spese totali
-        $data['total_incomes'] = $incomes->sum('income_amount');
+        $data['total_incomes'] = $total_incomes->sum('income_amount');
 
-        $data['total_expenses'] = $expenses->sum('expense_amount');
+        $data['total_expenses'] = $total_expenses->sum('expense_amount');
 
         $data['total_balance'] = $data['total_incomes'] - $data['total_expenses'];
 

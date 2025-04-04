@@ -189,15 +189,15 @@
                         @php
                             // Generate random colors for each category
                             $randomColors = [];
-                            for ($i = 0; $i < count($type_names); $i++) {
+                            for ($i = 0; $i < count($monthly_type_names); $i++) {
                                 $randomColors[] = sprintf('#%06X', mt_rand(0, 0xFFFFFF)); // Random hex color
                             }
                         @endphp
-                        @foreach($type_names as $key => $type_name)
+                        @foreach($monthly_type_names as $key => $monthly_type_name)
                             <p>
                                 <!-- Color Square -->
                                 <span style="display: inline-block; width: 15px; height: 15px; background-color: {{ $randomColors[$loop->index] }}; margin-right: 10px;"></span>
-                                {{ $type_name }}: {{ $monthly_expense_by_type[$key] }}
+                                {{ $monthly_type_name }}: {{ $monthly_expense_by_type[$key] }} €
                             </p>
                         @endforeach
                         <canvas id="categoryExpenseChart" style="width: 100%; height: 30vh;"></canvas>
@@ -282,7 +282,7 @@
                     return color;
                 }
 
-                var categoryNames = @json($type_names); // Categories (names)
+                var categoryNames = @json($monthly_type_names); // Categories (names)
                 var categoryAmounts = @json($monthly_expense_by_type); // Amounts by category
                 var randomColors = @json($randomColors); // Random colors for each category
 
