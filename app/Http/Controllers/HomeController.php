@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Type;
 use Illuminate\Http\Request;
-Use Auth;
 use Illuminate\support\Carbon;
 Use App\Models\Income;
 Use App\Models\Expense;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -50,22 +50,27 @@ class HomeController extends Controller
         });
 
         $typeIds = $monthly_expense_by_type->keys();
-        $typeNames = Type::whereIn('id', $typeIds)->pluck('name', 'id');
+        $type_names = Type::whereIn('id', $typeIds)->pluck('name', 'id');
 
-        $data['typeNames'] = $typeNames;
+        $data['type_names'] = $type_names;
         $data['monthly_expense_by_type'] = $monthly_expense_by_type;
-        $data['selectedYear'] = $year;
-        $data['selectedMonth'] = $month;
+        $data['selected_year'] = $year;
+        $data['selected_month'] = $month;
 
         $incomes = Income::where('user_id', Auth::id())->get();
 
         $expenses = Expense::where('user_id', Auth::id())->get();
 
-        $data['totalIncomes'] = $incomes->sum('income_amount');
 
-        $data['totalExpenses'] = $expenses->sum('expense_amount');
+        // Questo serve per mostrare il rettangolo per le spese totali
+        $data['total_incomes'] = $incomes->sum('income_amount');
 
-        $data['totalBalance'] = $data['totalIncomes'] - $data['totalExpenses'];
+        $data['total_expenses'] = $expenses->sum('expense_amount');
+
+        $data['total_balance'] = $data['total_incomes'] - $data['total_expenses'];
+
+
+        $data['all_incomes'] = Income::where('user_id', Auth::id())->get()->sum('income_amount');
 
         return view('pages.dashboard', $data);
     }

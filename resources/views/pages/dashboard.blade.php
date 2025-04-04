@@ -76,15 +76,15 @@
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         {{ __('messages.total_income') }}
-                        <span class="badge badge-primary badge-pill incomeValue">{{ $totalIncomes }}</span>
+                        <span class="badge badge-primary badge-pill incomeTotalValue">{{ $total_incomes }}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         {{ __('messages.total_expense') }}
-                        <span class="badge badge-danger badge-pill expenseValue">{{ $totalExpenses }}</span>
+                        <span class="badge badge-danger badge-pill expenseTotalValue">{{ $total_expenses }}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         {{ __('messages.balance') }}
-                        <span class="badge badge-primary badge-pill">{{ $totalBalance }}</span>
+                        <span class="badge badge-primary badge-pill">{{ $total_balance }}</span>
                     </li>
                 </ul>
             </div>
@@ -189,15 +189,15 @@
                         @php
                             // Generate random colors for each category
                             $randomColors = [];
-                            for ($i = 0; $i < count($typeNames); $i++) {
+                            for ($i = 0; $i < count($type_names); $i++) {
                                 $randomColors[] = sprintf('#%06X', mt_rand(0, 0xFFFFFF)); // Random hex color
                             }
                         @endphp
-                        @foreach($typeNames as $key => $typeName)
+                        @foreach($type_names as $key => $type_name)
                             <p>
                                 <!-- Color Square -->
                                 <span style="display: inline-block; width: 15px; height: 15px; background-color: {{ $randomColors[$loop->index] }}; margin-right: 10px;"></span>
-                                {{ $typeName }}: {{ $monthly_expense_by_type[$key] }}
+                                {{ $type_name }}: {{ $monthly_expense_by_type[$key] }}
                             </p>
                         @endforeach
                         <canvas id="categoryExpenseChart" style="width: 100%; height: 30vh;"></canvas>
@@ -208,20 +208,20 @@
         </div>
 
         <!-- Expense Categories Chart All data -->
-{{--        <div class="row">--}}
-{{--            <!-- Income vs Expense Chart -->--}}
-{{--            <div class="col-lg-6 col-md-12 mb-3">--}}
-{{--                <div class="card mb-3">--}}
-{{--                    <div class="card-header">--}}
-{{--                        <i class="fas fa-chart-pie"></i>--}}
-{{--                        {{ __('messages.income_vs_expense') }} <small class="badge badge-info">({{__('messages.all_data')}})</small>--}}
-{{--                    </div>--}}
-{{--                    <div class="card-body">--}}
-{{--                        <canvas id="incomeExpenseChart" style="width: 100%; height: 30vh;"></canvas>--}}
-{{--                    </div>--}}
-{{--                    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
+        <div class="row">
+            <!-- Income vs Expense Chart -->
+            <div class="col-lg-6 col-md-12 mb-3">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <i class="fas fa-chart-pie"></i>
+                        {{ __('messages.income_vs_expense') }} <small class="badge badge-info">({{__('messages.all_data')}})</small>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="incomeExpenseTotalChart" style="width: 100%; height: 30vh;"></canvas>
+                    </div>
+                    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+                </div>
+            </div>
             <!-- Expense by Category Chart -->
 {{--            <div class="col-lg-6 col-md-12 mb-3">--}}
 {{--                <div class="card mb-3">--}}
@@ -262,7 +262,7 @@
                 var ctx = document.getElementById("incomeExpenseChart");
                 var income = $(".incomeValue").html();
                 var expense = $(".expenseValue").html();
-                var incomeExpenseChart = new Chart(ctx, {
+                var income_vs_expense_chart = new Chart(ctx, {
                     type: 'pie',
                     data: {
                         labels: ["Income", "Expense"],
@@ -282,7 +282,7 @@
                     return color;
                 }
 
-                var categoryNames = @json($typeNames); // Categories (names)
+                var categoryNames = @json($type_names); // Categories (names)
                 var categoryAmounts = @json($monthly_expense_by_type); // Amounts by category
                 var randomColors = @json($randomColors); // Random colors for each category
 
@@ -299,7 +299,7 @@
 
                 // Create the Expense Categories Pie Chart
                 var categoryCtx = document.getElementById("categoryExpenseChart");
-                var categoryExpenseChart = new Chart(categoryCtx, {
+                var category_expense_chart = new Chart(categoryCtx, {
                     type: 'pie',
                     data: {
                         labels: categories,
@@ -310,28 +310,17 @@
                     },
                 });
 
-                // Expense Categories Pie Chart
-                var categoryCtx = document.getElementById("categoryExpenseChart");
-
-                // Prepare the data for the chart
-                var categories = [];
-                var amounts = [];
-
-                for (var key in categoryAmounts) {
-                    if (categoryAmounts.hasOwnProperty(key)) {
-                        categories.push(categoryNames[key]);  // Add the category name
-                        amounts.push(categoryAmounts[key]);  // Add the total expense for that category
-                    }
-                }
-
-                // Create the Expense Categories Pie Chart
-                var categoryExpenseChart = new Chart(categoryCtx, {
+                //Income expense Total Pie Chart
+                var ctx = document.getElementById("incomeExpenseTotalChart");
+                var income = $(".incomeTotalValue").html();
+                var expense = $(".expenseTotalValue").html();
+                var income_vs_expense_chart = new Chart(ctx, {
                     type: 'pie',
                     data: {
-                        labels: categories,
+                        labels: ["Income", "Expense"],
                         datasets: [{
-                            data: amounts,
-                            backgroundColor: randomColors, // Use the random colors array here
+                            data: [income, expense],
+                            backgroundColor: ['#007bff', '#dc3545'],
                         }],
                     },
                 });
