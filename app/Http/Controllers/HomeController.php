@@ -50,6 +50,7 @@ class HomeController extends Controller
         });
 
         $monthly_type_ids = $monthly_expense_by_type->keys();
+
         $monthly_type_names = Type::whereIn('id', $monthly_type_ids)->pluck('name', 'id');
 
         $data['monthly_type_names'] = $monthly_type_names;
@@ -69,8 +70,19 @@ class HomeController extends Controller
 
         $data['total_balance'] = $data['total_incomes'] - $data['total_expenses'];
 
-
         $data['all_incomes'] = Income::where('user_id', Auth::id())->get()->sum('income_amount');
+
+        // Variabili usati per fare i chart pie
+        $total_expense_by_type = $total_expenses->groupBy('type_id')->map(function ($group) {
+            return $group->sum('expense_amount');
+        });
+
+        $total_type_ids = $total_expense_by_type->keys();
+
+        $total_type_names = Type::whereIn('id', $total_type_ids)->pluck('name', 'id');
+
+        $data['total_type_names'] = $total_type_names;
+        $data['total_expense_by_type'] = $total_expense_by_type;
 
         return view('pages.dashboard', $data);
     }

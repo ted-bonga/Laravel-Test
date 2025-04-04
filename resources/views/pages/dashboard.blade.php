@@ -171,6 +171,16 @@
                         {{ __('messages.income_vs_expense') }} <small class="badge badge-info">({{__('messages.this_month_data')}})</small>
                     </div>
                     <div class="card-body">
+                        <div class="mt-3">
+                            <p>
+                                <span style="display: inline-block; width: 15px; height: 15px; background-color: #007bff; margin-right: 10px;"></span>
+                                {{ __('messages.total_income') }}: {{ $monthly_incomes }} €
+                            </p>
+                            <p>
+                                <span style="display: inline-block; width: 15px; height: 15px; background-color: #dc3545; margin-right: 10px;"></span>
+                                {{ __('messages.total_expense') }}: {{ $monthly_expenses }} €
+                            </p>
+                        </div>
                         <canvas id="incomeExpenseChart" style="width: 100%; height: 30vh;"></canvas>
                     </div>
                     <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
@@ -217,39 +227,49 @@
                         {{ __('messages.income_vs_expense') }} <small class="badge badge-info">({{__('messages.all_data')}})</small>
                     </div>
                     <div class="card-body">
+                        <div class="mt-3">
+                            <p>
+                                <span style="display: inline-block; width: 15px; height: 15px; background-color: #007bff; margin-right: 10px;"></span>
+                                {{ __('messages.total_income') }}: {{ $total_incomes }} €
+                            </p>
+                            <p>
+                                <span style="display: inline-block; width: 15px; height: 15px; background-color: #dc3545; margin-right: 10px;"></span>
+                                {{ __('messages.total_expense') }}: {{ $total_expenses }} €
+                            </p>
+                        </div>
                         <canvas id="incomeExpenseTotalChart" style="width: 100%; height: 30vh;"></canvas>
                     </div>
                     <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
                 </div>
             </div>
             <!-- Expense by Category Chart -->
-{{--            <div class="col-lg-6 col-md-12 mb-3">--}}
-{{--                <div class="card mb-3">--}}
-{{--                    <div class="card-header">--}}
-{{--                        <i class="fas fa-chart-pie"></i>--}}
-{{--                        {{ __('messages.expense_by_category') }}--}}
-{{--                        <small class="badge badge-info">({{__('messages.all_data')}})</small>--}}
-{{--                    </div>--}}
-{{--                    <div class="card-body">--}}
-{{--                        @php--}}
-{{--                            // Generate random colors for each category--}}
-{{--                            $randomColors = [];--}}
-{{--                            for ($i = 0; $i < count($typeNames); $i++) {--}}
-{{--                                $randomColors[] = sprintf('#%06X', mt_rand(0, 0xFFFFFF)); // Random hex color--}}
-{{--                            }--}}
-{{--                        @endphp--}}
-{{--                        @foreach($typeNames as $key => $typeName)--}}
-{{--                            <p>--}}
-{{--                                <!-- Color Square -->--}}
-{{--                                <span style="display: inline-block; width: 15px; height: 15px; background-color: {{ $randomColors[$loop->index] }}; margin-right: 10px;"></span>--}}
-{{--                                {{ $typeName }}: {{ $expenseByType[$key] }}--}}
-{{--                            </p>--}}
-{{--                        @endforeach--}}
-{{--                        <canvas id="categoryExpenseChart" style="width: 100%; height: 30vh;"></canvas>--}}
-{{--                    </div>--}}
-{{--                    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
+            <div class="col-lg-6 col-md-12 mb-3">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <i class="fas fa-chart-pie"></i>
+                        {{ __('messages.expense_by_category') }}
+                        <small class="badge badge-info">({{__('messages.all_data')}})</small>
+                    </div>
+                    <div class="card-body">
+                        @php
+                            // Generate random colors for each category
+                            $randomColors = [];
+                            for ($i = 0; $i < count($total_type_names); $i++) {
+                                $randomColors[] = sprintf('#%06X', mt_rand(0, 0xFFFFFF)); // Random hex color
+                            }
+                        @endphp
+                        @foreach($total_type_names as $key => $total_type_name)
+                            <p>
+                                <!-- Color Square -->
+                                <span style="display: inline-block; width: 15px; height: 15px; background-color: {{ $randomColors[$loop->index] }}; margin-right: 10px;"></span>
+                                {{ $total_type_name }}: {{ $total_expense_by_type[$key] }} €
+                            </p>
+                        @endforeach
+                        <canvas id="categoryTotalExpenseChart" style="width: 100%; height: 30vh;"></canvas>
+                    </div>
+                    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+                </div>
+            </div>
         </div>
 
 
@@ -324,5 +344,32 @@
                         }],
                     },
                 });
+                // Total Expense by Category Chart
+                var totalCategoryNames = @json($total_type_names); // Total category names
+                var totalCategoryAmounts = @json($total_expense_by_type); // Total expenses per category
+                var totalRandomColors = @json($randomColors); // Random colors generated in Blade
+
+                var totalCategories = [];
+                var totalAmounts = [];
+
+                for (var key in totalCategoryAmounts) {
+                    if (totalCategoryAmounts.hasOwnProperty(key)) {
+                        totalCategories.push(totalCategoryNames[key]);
+                        totalAmounts.push(totalCategoryAmounts[key]);
+                    }
+                }
+
+                var totalCategoryCtx = document.getElementById("categoryTotalExpenseChart");
+                var category_total_expense_chart = new Chart(totalCategoryCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: totalCategories,
+                        datasets: [{
+                            data: totalAmounts,
+                            backgroundColor: totalRandomColors,
+                        }],
+                    },
+                });
             </script>
     @endpush
+
