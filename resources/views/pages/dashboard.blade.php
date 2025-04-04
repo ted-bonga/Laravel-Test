@@ -324,5 +324,7 @@
                         }],
                     },
                 });
+
+                var categoryNamesTotal = @json($type_names_total);
             </script>
     @endpush
