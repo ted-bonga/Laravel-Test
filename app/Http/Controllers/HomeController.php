@@ -27,33 +27,33 @@ class HomeController extends Controller
         $month = $request->input('month', Carbon::now()->month);
 
         // Fetch data based on the year and month
-        $data['incomes'] = Income::where('user_id', Auth::id())
+        $data['monthly_incomes'] = Income::where('user_id', Auth::id())
             ->whereYear('income_date', $year)
             ->whereMonth('income_date', $month)
             ->sum('income_amount');
 
-        $data['expenses'] = Expense::where('user_id', Auth::id())
+        $data['monthly_expenses'] = Expense::where('user_id', Auth::id())
             ->whereYear('expense_date', $year)
             ->whereMonth('expense_date', $month)
             ->sum('expense_amount');
 
-        $data['balance'] = number_format($data['incomes'] - $data['expenses'], 2, '.', '');
+        $data['monthly_balance'] = number_format($data['monthly_incomes'] - $data['monthly_expenses'], 2, '.', '');
 
         // Group expenses by type and fetch type names
-        $expenses = Expense::where('user_id', Auth::id())
+        $monthly_expenses = Expense::where('user_id', Auth::id())
             ->whereYear('expense_date', $year)
             ->whereMonth('expense_date', $month)
             ->get();
 
-        $expenseByType = $expenses->groupBy('type_id')->map(function ($group) {
+        $monthly_expense_by_type = $monthly_expenses->groupBy('type_id')->map(function ($group) {
             return $group->sum('expense_amount');
         });
 
-        $typeIds = $expenseByType->keys();
+        $typeIds = $monthly_expense_by_type->keys();
         $typeNames = Type::whereIn('id', $typeIds)->pluck('name', 'id');
 
         $data['typeNames'] = $typeNames;
-        $data['expenseByType'] = $expenseByType;
+        $data['monthly_expense_by_type'] = $monthly_expense_by_type;
         $data['selectedYear'] = $year;
         $data['selectedMonth'] = $month;
 

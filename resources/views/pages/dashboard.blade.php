@@ -55,15 +55,15 @@
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         {{ __('messages.total_income') }}
-                        <span class="badge badge-primary badge-pill incomeValue">{{ $incomes }}</span>
+                        <span class="badge badge-primary badge-pill incomeValue">{{ $monthly_incomes }}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         {{ __('messages.total_expense') }}
-                        <span class="badge badge-danger badge-pill expenseValue">{{ $expenses }}</span>
+                        <span class="badge badge-danger badge-pill expenseValue">{{ $monthly_expenses }}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         {{ __('messages.balance') }}
-                        <span class="badge badge-primary badge-pill">{{ $balance }}</span>
+                        <span class="badge badge-primary badge-pill">{{ $monthly_balance }}</span>
                     </li>
                 </ul>
             </div>
@@ -197,7 +197,7 @@
                             <p>
                                 <!-- Color Square -->
                                 <span style="display: inline-block; width: 15px; height: 15px; background-color: {{ $randomColors[$loop->index] }}; margin-right: 10px;"></span>
-                                {{ $typeName }}: {{ $expenseByType[$key] }}
+                                {{ $typeName }}: {{ $monthly_expense_by_type[$key] }}
                             </p>
                         @endforeach
                         <canvas id="categoryExpenseChart" style="width: 100%; height: 30vh;"></canvas>
@@ -283,7 +283,7 @@
                 }
 
                 var categoryNames = @json($typeNames); // Categories (names)
-                var categoryAmounts = @json($expenseByType); // Amounts by category
+                var categoryAmounts = @json($monthly_expense_by_type); // Amounts by category
                 var randomColors = @json($randomColors); // Random colors for each category
 
                 // Prepare the data for the chart
