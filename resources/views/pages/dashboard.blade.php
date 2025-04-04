@@ -285,7 +285,7 @@
                 var income_vs_expense_chart = new Chart(ctx, {
                     type: 'pie',
                     data: {
-                        labels: ["Income", "Expense"],
+                        labels: ["Entrate", "Spese"],
                         datasets: [{
                             data: [income, expense],
                             backgroundColor: ['#007bff', '#dc3545'],
@@ -337,7 +337,7 @@
                 var income_vs_expense_chart = new Chart(ctx, {
                     type: 'pie',
                     data: {
-                        labels: ["Income", "Expense"],
+                        labels: ["Entrate", "Spese"],
                         datasets: [{
                             data: [income, expense],
                             backgroundColor: ['#007bff', '#dc3545'],
