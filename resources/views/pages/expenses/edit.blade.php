@@ -42,6 +42,22 @@
                             </div>
                             <div class="form-group">
                                 <div class="form-label-group">
+                                    <select id="expense_type_id" class="form-control" name="expense_type_id" required>
+                                        <option value="" disabled
+                                                @if(is_null($expense->type_id)) selected @endif>
+                                            {{ $expense->type_id ? $expense->type->name : 'Select Expense Type' }}
+                                        </option>
+                                        @foreach($types as $type)
+                                            <option value="{{ $type->id }}"
+                                                    @if($expense->type_id == $type->id) selected @endif>
+                                                {{ $type->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-label-group">
                                     <input type="date" id="expense_date" class="form-control" placeholder="Password" required="required" name="expense_date" value="{{ $expense->expense_date }}">
                                     <label for="expense_date">Expense Date</label>
                                 </div>

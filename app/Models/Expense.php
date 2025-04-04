@@ -15,4 +15,9 @@ class Expense extends Model
     {
     	return $this->hasOne('App\Models\User', 'user_id', 'id');
     }
+
+    public function type()
+    {
+        return $this->belongsTo('App\Models\Type','type_id','id');
+    }
 }

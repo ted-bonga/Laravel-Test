@@ -4,12 +4,12 @@
     <div class="container-fluid">
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
-                <a href="{{ route('index') }}">Dashboard</a>
+                <a href="{{ route('index') }}">{{__('messages.dashboard')}}</a>
             </li>
             <li class="breadcrumb-item active">
-                <a href="{{ route('incomes.index') }}">Income</a>
+                <a href="{{ route('incomes.index') }}">{{__('messages.income.index')}}</a>
             </li>
-            <li class="breadcrumb-item active">Insert</li>
+            <li class="breadcrumb-item active">{{__('messages.income.add')}}</li>
         </ol>
         @if ($errors->any())
         <div class="alert alert-danger alert-dismissible fade show rounded" role="alert">
@@ -30,7 +30,7 @@
                             <div class="form-group">
                                 <div class="form-label-group">
                                     <input type="text" id="income_title" class="form-control" placeholder="Email address" required="required" autofocus="autofocus" name="income_title">
-                                    <label for="income_title">Income Description</label>
+                                    <label for="income_title">{{__('messages.income.description')}}</label>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -41,13 +41,13 @@
                             </div>
                             <div class="form-group">
                                 <div class="form-label-group">
-                                    <input type="date" id="income_date" class="form-control" placeholder="Income Date" required="required" name="income_date" value="{{ date('Y-m-d') }}">
-                                    <label for="income_date">Income Date</label>
+                                    <input type="date" id="income_date" class="form-control form-control-lg" name="income_date" value="{{ date('Y-m-d') }}" required>
+                                    <label for="income_amount" class="d-block d-sm-inline small">{{ __('messages.income.date') }}</label>
                                 </div>
                             </div>
                             <div class="float-right">
-                                <a href="{{ route('incomes.index') }}" class="btn btn-success">Back</a>
-                                <button type="submit" class="btn btn-primary">Save</button>
+                                <a href="{{ route('incomes.index') }}" class="btn btn-success">{{__('messages.back')}}</a>
+                                <button type="submit" class="btn btn-primary">{{__('messages.save')}}</button>
                             </div>
                         </form>
                     </div>
@@ -56,3 +56,10 @@
         </div>
     </div>
 @endsection
+<style>
+    @media (max-width: 768px) { /* Mobile screens */
+        label[for="income_amount"] {
+            font-size: 12px; /* Reduce text size */
+        }
+    }
+</style>

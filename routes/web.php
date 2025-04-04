@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\HomeController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -40,3 +43,13 @@ Route::post('/expense/store', 'ExpenseController@store')->name('expense.store');
 Route::get('/expense/edit/{id}', 'ExpenseController@edit')->name('expenses.edit');
 Route::post('/expense/update', 'ExpenseController@update')->name('expenses.update');
 Route::get('/expense/delete/{id}', 'ExpenseController@destroy')->name('expenses.delete');
+
+if (env('APP_ENV') === 'production') {
+    Route::get('/register', 'HomeController@index')->name('index');
+}
+
+Route::get('lang/{lang}', function ($lang) {
+    Session::put('locale', $lang);
+    App::setLocale($lang);
+    return redirect()->back();
+})->name('lang.switch');

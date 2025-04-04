@@ -4,9 +4,9 @@
     <div class="container-fluid">
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
-                <a href="{{ route('index') }}">Dashboard</a>
+                <a href="{{ route('index') }}">{{__('messages.dashboard')}}</a>
             </li>
-            <li class="breadcrumb-item active">Income</li>
+            <li class="breadcrumb-item active">{{__('messages.income.index')}}</li>
         </ol>
         @if (Session::has('message'))
         <div class="alert alert-success alert-dismissible fade show rounded" role="alert">
@@ -20,10 +20,10 @@
         	<div class="col-xl-6 offset-xl-3 col-sm-12 mb-3">
         		<ul class="list-group">
 				  <li class="list-group-item d-flex justify-content-between align-items-center">
-				    <a href="{{ route('incomes.create') }}" class="badge badge-success p-2 mx-auto">Add New Income</a>
+				    <a href="{{ route('incomes.create') }}" class="badge badge-success p-2 mx-auto">{{__('messages.income.add')}}</a>
 				  </li>
 				  <li class="list-group-item d-flex justify-content-between align-items-center">
-				    Total Income
+				    {{__('messages.income.total')}}
                       <span class="badge badge-primary badge-pill">{{ $totalIncomes }}</span>
 				  </li>
 				</ul>

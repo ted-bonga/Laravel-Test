@@ -4,9 +4,9 @@
     <div class="container-fluid">
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
-                <a href="{{ route('index') }}">Dashboard</a>
+                <a href="{{ route('index') }}">{{__('messages.dashboard')}}</a>
             </li>
-            <li class="breadcrumb-item active">Expense</li>
+            <li class="breadcrumb-item active">{{__('messages.expense.index')}}</li>
         </ol>
         @if (Session::has('message'))
         <div class="alert alert-success alert-dismissible fade show rounded" role="alert">
@@ -19,11 +19,11 @@
         	<div class="col-xl-6 offset-xl-3 col-sm-12 mb-3">
         		<ul class="list-group">
 				  <li class="list-group-item d-flex justify-content-between align-items-center">
-				    <a href="{{ route('expense.create') }}" class="badge badge-primary p-2 mx-auto">Add New Expense</a>
+				    <a href="{{ route('expense.create') }}" class="badge badge-primary p-2 mx-auto">{{__('messages.expense.add')}}</a>
 				  </li>
 				  <li class="list-group-item d-flex justify-content-between align-items-center">
-				    Total Expense
-                      <span class="badge badge-danger badge-pill">{{ $totalExpenses }}</span>
+				    {{__('messages.expense.total')}}
+                      <span class="badge badge-danger badge-pill">{{ $totalExpenses }} </span>
 				  </li>
 				</ul>
         	</div>
@@ -45,6 +45,12 @@
                             </div>
                             <div>{{ $expense->expense_title }}</div>
                             <div class="font-weight-bold"><span style="font-weight:900;">€ </span> {{ $expense->expense_amount }}</div>
+                            @foreach($types as $type)
+                                @if($type->id === $expense->type_id)
+                                    <div class="font-weight-bold"> {{ $type->name }}</div>
+                                @endif
+                            @endforeach
+{{--                            <div>{{ $expense->type->name }}</div>--}}
                             <div> {{ $expense->expense_date }}</div>
                         </div>
                     </div>

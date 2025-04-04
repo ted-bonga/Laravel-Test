@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Type;
 use Illuminate\Http\Request;
 Use Auth;
 use Illuminate\support\Carbon;
@@ -20,12 +21,51 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $year = $request->input('year', Carbon::now()->year);
+        $month = $request->input('month', Carbon::now()->month);
 
-        $data['incomes'] = Income::where('user_id', Auth::User()->id)->whereYear('income_date', Carbon::now()->year)->whereMonth('income_date', Carbon::now()->month)->sum('income_amount');
-        $data['expenses'] = Expense::where('user_id', Auth::User()->id)->whereYear('expense_date', Carbon::now()->year)->whereMonth('expense_date', Carbon::now()->month)->sum('expense_amount');
-        $data['balance'] = $data['incomes'] - $data['expenses'];
+        // Fetch data based on the year and month
+        $data['incomes'] = Income::where('user_id', Auth::id())
+            ->whereYear('income_date', $year)
+            ->whereMonth('income_date', $month)
+            ->sum('income_amount');
+
+        $data['expenses'] = Expense::where('user_id', Auth::id())
+            ->whereYear('expense_date', $year)
+            ->whereMonth('expense_date', $month)
+            ->sum('expense_amount');
+
+        $data['balance'] = number_format($data['incomes'] - $data['expenses'], 2, '.', '');
+
+        // Group expenses by type and fetch type names
+        $expenses = Expense::where('user_id', Auth::id())
+            ->whereYear('expense_date', $year)
+            ->whereMonth('expense_date', $month)
+            ->get();
+
+        $expenseByType = $expenses->groupBy('type_id')->map(function ($group) {
+            return $group->sum('expense_amount');
+        });
+
+        $typeIds = $expenseByType->keys();
+        $typeNames = Type::whereIn('id', $typeIds)->pluck('name', 'id');
+
+        $data['typeNames'] = $typeNames;
+        $data['expenseByType'] = $expenseByType;
+        $data['selectedYear'] = $year;
+        $data['selectedMonth'] = $month;
+
+        $incomes = Income::where('user_id', Auth::id())->get();
+
+        $expenses = Expense::where('user_id', Auth::id())->get();
+
+        $data['totalIncomes'] = $incomes->sum('income_amount');
+
+        $data['totalExpenses'] = $expenses->sum('expense_amount');
+
+        $data['totalBalance'] = $data['totalIncomes'] - $data['totalExpenses'];
 
         return view('pages.dashboard', $data);
     }
@@ -55,6 +95,7 @@ class HomeController extends Controller
         $totalIncome = Income::where('user_id', $userId)->sum('income_amount');
         $totalExpense = Expense::where('user_id', $userId)->sum('expense_amount');
         $balance = $totalIncome - $totalExpense;
+        $balance= number_format($balance,2,'.','');
 
         // Prepare data for the view
         $data = [
